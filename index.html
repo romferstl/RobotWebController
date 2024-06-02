@@ -37,16 +37,20 @@
                 </div>
                 <button id="WriteButton" class="btn btn-primary btn-hover-scale">Send Message</button>
                 <div class="mb-3">
-                    <label for="sliderKP" class="form-label">Slider KP: <span id="sliderKPValue">4</span></label>
-                    <input type="range" class="form-range slider" id="sliderKP" min="0" max="30" step="0.2" value="4">
+                    <label for="sliderKP" class="form-label">Slider KP: <span id="sliderKPValue">40</span></label>
+                    <input type="range" class="form-range slider" id="sliderKP" min="0" max="300" step="1" value="40">
                 </div>
                 <div class="mb-3">
                     <label for="sliderKD" class="form-label">Slider KD: <span id="sliderKDValue">0</span></label>
-                    <input type="range" class="form-range slider" id="sliderKD" min="0" max="2" step="0.01" value="0">
+                    <input type="range" class="form-range slider" id="sliderKD" min="0" max="10" step="0.01" value="0">
                 </div>
                 <div class="mb-3">
                     <label for="sliderKI" class="form-label">Slider KI: <span id="sliderKIValue">0</span></label>
-                    <input type="range" class="form-range slider" id="sliderKI" min="0" max="5" step="0.5" value="0">
+                    <input type="range" class="form-range slider" id="sliderKI" min="0" max="10" step="0.02" value="0">
+                </div>
+                <div class="mb-3">
+                    <label for="sliderSETPOINT" class="form-label">Slider SetPoint: <span id="sliderSETPOINTValue">87</span></label>
+                    <input type="range" class="form-range slider" id="sliderSETPOINT" min="45" max="135" step="0.2" value="87">
                 </div>
             </div>
         </div>
@@ -87,8 +91,8 @@
                 animation: false,
                 scales: {
                     y: {
-                        min: -10,
-                        max: 190
+                        min: 60,
+                        max: 120
                     }
                 }
             }
@@ -148,6 +152,24 @@
             }
         });
 
+        var sliderSETPOINT = document.getElementById("sliderSETPOINT");
+        const sliderSETPOINTValue = document.getElementById("sliderSETPOINTValue");
+        sliderSETPOINT.addEventListener("input", () => {
+            sliderSETPOINTValue.textContent = sliderSETPOINT.value;
+            if (Server && Server.connected) {
+                if (!("TextEncoder" in window))
+                    alert("Sorry, this browser does not support TextEncoder...");
+                var input_text = sliderSETPOINT.value;
+                var enc = new TextEncoder();
+                var sendstring = enc.encode(input_text);
+
+                console.log("Writing \'" + input_text + "\' to Device")
+                CharacteristicSETPOINT.writeValue(sendstring);
+            } else {
+                console.log("server or characteristic missing")
+            }
+        });
+
         var SERVICE_ENVIRONMENT_UUID = "70a9dda7-b73c-42cb-9ef3-a452d0844d10";
         var SERVICE_CONTROL_UUID = "74741977-c0c4-4f8a-9831-a261f8b83d16";
         var CHARACTERISTIC_MOTOR_UUID = "c7c70dec-ee2d-4212-8183-49060f283bff";
@@ -155,6 +177,8 @@
         var CHARACTERISTIC_KP_UUID = "f18ae210-be7e-4414-9b7a-73e9a729ba07"
         var CHARACTERISTIC_KD_UUID = "1bd6ba58-f400-4d32-a8c7-397e0706c3a0"
         var CHARACTERISTIC_KI_UUID = "c23b847e-0c14-4196-abb3-0c8612b49ff6"
+        var CHARACTERISTIC_SETPOINT_UUID = "cd912393-7352-4ba8-a49b-56b5eab6a920"
+
 
         var Server = null;
         var CharacteristicAcc = null;
@@ -162,6 +186,7 @@
         var CharacteristicKP = null;
         var CharacteristicKD = null;
         var CharacteristicKI = null;
+        var CharacteristicSETPOINT = null;
 
 
         const connectionStatusText = document.getElementById("connectionStatusText");
@@ -248,6 +273,9 @@
                 CharacteristicKP = await ServiceControl.getCharacteristic(CHARACTERISTIC_KP_UUID);
                 CharacteristicKD = await ServiceControl.getCharacteristic(CHARACTERISTIC_KD_UUID);
                 CharacteristicKI = await ServiceControl.getCharacteristic(CHARACTERISTIC_KI_UUID);
+                CharacteristicSETPOINT = await ServiceControl.getCharacteristic(CHARACTERISTIC_SETPOINT_UUID);
+
+                //CHARACTERISTIC_SETPOINT_UUID
                 console.log("Got Characteristics:", CharacteristicKP.uuid, CharacteristicKD.uuid, CharacteristicKI.uuid);
 
 

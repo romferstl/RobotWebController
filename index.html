@@ -37,8 +37,8 @@
                 </div>
                 <button id="WriteButton" class="btn btn-primary btn-hover-scale">Send Message</button>
                 <div class="mb-3">
-                    <label for="sliderKP" class="form-label">Slider KP: <span id="sliderKPValue">40</span></label>
-                    <input type="range" class="form-range slider" id="sliderKP" min="0" max="300" step="1" value="40">
+                    <label for="sliderKP" class="form-label">Slider KP: <span id="sliderKPValue">4</span></label>
+                    <input type="range" class="form-range slider" id="sliderKP" min="0" max="30" step="0.2" value="4">
                 </div>
                 <div class="mb-3">
                     <label for="sliderKD" class="form-label">Slider KD: <span id="sliderKDValue">0</span></label>
@@ -50,7 +50,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="sliderSETPOINT" class="form-label">Slider SetPoint: <span id="sliderSETPOINTValue">87</span></label>
-                    <input type="range" class="form-range slider" id="sliderSETPOINT" min="45" max="135" step="0.2" value="87">
+                    <input type="range" class="form-range slider" id="sliderSETPOINT" min="45" max="135" step="0.2" value="90">
                 </div>
             </div>
         </div>
@@ -91,7 +91,7 @@
                 animation: false,
                 scales: {
                     y: {
-                        min: 60,
+                        min: -60,
                         max: 120
                     }
                 }
@@ -178,7 +178,6 @@
         var CHARACTERISTIC_KD_UUID = "1bd6ba58-f400-4d32-a8c7-397e0706c3a0"
         var CHARACTERISTIC_KI_UUID = "c23b847e-0c14-4196-abb3-0c8612b49ff6"
         var CHARACTERISTIC_SETPOINT_UUID = "cd912393-7352-4ba8-a49b-56b5eab6a920"
-
 
         var Server = null;
         var CharacteristicAcc = null;
@@ -274,9 +273,7 @@
                 CharacteristicKD = await ServiceControl.getCharacteristic(CHARACTERISTIC_KD_UUID);
                 CharacteristicKI = await ServiceControl.getCharacteristic(CHARACTERISTIC_KI_UUID);
                 CharacteristicSETPOINT = await ServiceControl.getCharacteristic(CHARACTERISTIC_SETPOINT_UUID);
-
-                //CHARACTERISTIC_SETPOINT_UUID
-                console.log("Got Characteristics:", CharacteristicKP.uuid, CharacteristicKD.uuid, CharacteristicKI.uuid);
+                console.log("Got Characteristics:", CharacteristicKP.uuid, CharacteristicKD.uuid, CharacteristicKI.uuid, CharacteristicSETPOINT.uuid);
 
 
             } catch (error) {
